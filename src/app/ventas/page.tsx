@@ -4,6 +4,7 @@ import { db } from "@/firebase/config";
 import { collection, addDoc, getDocs, Timestamp, query, orderBy } from "firebase/firestore";
 import { saveAs } from "file-saver";
 import IAChatFloating from "@/components/common/IAChatFloating";
+import NavbarClient from "@/components/common/NavbarClient";
 
 interface Venta {
   id?: string;
@@ -83,6 +84,7 @@ export default function Ventas() {
 
   return (
     <>
+      <NavbarClient />
       <div className="max-w-2xl mx-auto mt-8 p-6 bg-white rounded shadow">
         <h2 className="text-2xl font-bold mb-4">Registrar Nueva Venta</h2>
         <form onSubmit={handleAddVenta} className="mb-6">

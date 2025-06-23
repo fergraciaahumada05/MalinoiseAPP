@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { auth } from "@/firebase/config";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import IAChatFloating from "@/components/common/IAChatFloating";
+import NavbarClient from "@/components/common/NavbarClient";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function Dashboard() {
 
   return (
     <>
+      <NavbarClient />
       <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded shadow">
         <h1 className="text-3xl font-bold mb-4">Dashboard Malinoise</h1>
         <p className="mb-6">Bienvenido. Aquí irá el dashboard real y los módulos conectados a Firestore.</p>

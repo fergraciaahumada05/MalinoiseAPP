@@ -10,6 +10,7 @@ import { auth } from "@/firebase/config";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import IAChatFloating from "@/components/common/IAChatFloating";
+import NavbarClient from "@/components/common/NavbarClient";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false }) as ComponentType<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -170,6 +171,7 @@ export default function Analitica() {
 
   return (
     <>
+      <NavbarClient />
       <div id="analitica-dashboard" className="max-w-4xl mx-auto mt-8 p-6 bg-white rounded shadow space-y-8">
         <div className="flex justify-end mb-4">
           <button onClick={exportarPDF} className="bg-fuchsia-600 text-white px-4 py-2 rounded shadow hover:bg-fuchsia-700">Descargar PDF</button>
