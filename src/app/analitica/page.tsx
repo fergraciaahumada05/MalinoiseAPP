@@ -9,6 +9,7 @@ import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/firebase/config";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import IAChatFloating from "@/components/common/IAChatFloating";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false }) as ComponentType<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -168,106 +169,109 @@ export default function Analitica() {
   };
 
   return (
-    <div id="analitica-dashboard" className="max-w-4xl mx-auto mt-8 p-6 bg-white rounded shadow space-y-8">
-      <div className="flex justify-end mb-4">
-        <button onClick={exportarPDF} className="bg-fuchsia-600 text-white px-4 py-2 rounded shadow hover:bg-fuchsia-700">Descargar PDF</button>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-4 bg-gradient-to-br from-teal-50 to-white rounded shadow flex flex-col items-center">
-          <span className="text-slate-500">Flujo de Caja (mes actual)</span>
-          <span className={`text-2xl font-bold mt-2 ${flujoCaja < 0 ? "text-red-600" : "text-green-600"}`}>{flujoCaja >= 0 ? `+${flujoCaja.toFixed(2)} €` : `${flujoCaja.toFixed(2)} €`}</span>
+    <>
+      <div id="analitica-dashboard" className="max-w-4xl mx-auto mt-8 p-6 bg-white rounded shadow space-y-8">
+        <div className="flex justify-end mb-4">
+          <button onClick={exportarPDF} className="bg-fuchsia-600 text-white px-4 py-2 rounded shadow hover:bg-fuchsia-700">Descargar PDF</button>
         </div>
-        <div className="p-4 bg-gradient-to-br from-yellow-50 to-white rounded shadow flex flex-col items-center">
-          <span className="text-slate-500">Ventas estimadas (próx. mes)</span>
-          <span className="text-2xl font-bold mt-2">{proyeccionVentas.toFixed(2)} €</span>
-        </div>
-        <div className="p-4 bg-gradient-to-br from-rose-50 to-white rounded shadow flex flex-col items-center">
-          <span className="text-slate-500">Gastos estimados (próx. mes)</span>
-          <span className="text-2xl font-bold mt-2">{proyeccionGastos.toFixed(2)} €</span>
-        </div>
-      </div>
-      <div className="mb-6 p-4 bg-slate-100 rounded shadow">
-        <h3 className="font-semibold mb-2 flex items-center gap-2"><span className="text-teal-600">💡</span>Recomendaciones</h3>
-        <ul className="list-disc pl-5 space-y-1">
-          {recomendaciones.map((rec, i) => (
-            <li key={i} className="text-slate-700">{rec}</li>
-          ))}
-        </ul>
-      </div>
-      <div className="mb-6 p-4 bg-slate-100 rounded shadow">
-        <h3 className="font-semibold mb-2 flex items-center gap-2"><span className="text-indigo-600">🔮</span>Proyección Próximo Mes</h3>
-        <div className="flex flex-col md:flex-row gap-6">
-          <div>
-            <div className="text-slate-600">Ventas estimadas</div>
-            <div className="text-lg font-bold">{proyeccionVentas.toFixed(2)} €</div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="p-4 bg-gradient-to-br from-teal-50 to-white rounded shadow flex flex-col items-center">
+            <span className="text-slate-500">Flujo de Caja (mes actual)</span>
+            <span className={`text-2xl font-bold mt-2 ${flujoCaja < 0 ? "text-red-600" : "text-green-600"}`}>{flujoCaja >= 0 ? `+${flujoCaja.toFixed(2)} €` : `${flujoCaja.toFixed(2)} €`}</span>
           </div>
-          <div>
-            <div className="text-slate-600">Gastos estimados</div>
-            <div className="text-lg font-bold">{proyeccionGastos.toFixed(2)} €</div>
+          <div className="p-4 bg-gradient-to-br from-yellow-50 to-white rounded shadow flex flex-col items-center">
+            <span className="text-slate-500">Ventas estimadas (próx. mes)</span>
+            <span className="text-2xl font-bold mt-2">{proyeccionVentas.toFixed(2)} €</span>
           </div>
-          <div>
-            <div className="text-slate-600">Flujo de caja estimado</div>
-            <div className={`text-lg font-bold ${proyeccionFlujo < 0 ? "text-red-600" : "text-green-600"}`}>{proyeccionFlujo >= 0 ? `+${proyeccionFlujo.toFixed(2)} €` : `${proyeccionFlujo.toFixed(2)} €`}</div>
+          <div className="p-4 bg-gradient-to-br from-rose-50 to-white rounded shadow flex flex-col items-center">
+            <span className="text-slate-500">Gastos estimados (próx. mes)</span>
+            <span className="text-2xl font-bold mt-2">{proyeccionGastos.toFixed(2)} €</span>
           </div>
         </div>
-      </div>
-      <div className="mb-6 p-4 bg-slate-100 rounded shadow">
-        <h3 className="font-semibold mb-2 flex items-center gap-2"><span className="text-fuchsia-600">🧮</span>Simulador de Escenarios (What-if)</h3>
-        <div className="flex flex-col md:flex-row gap-6 items-end">
-          <div>
-            <label className="block text-slate-600 mb-1" htmlFor="sim-ventas">Ventas estimadas (€)</label>
-            <input id="sim-ventas" type="number" className="border rounded p-2 w-32" value={simVentas} min={0} onChange={e => setSimVentas(Number(e.target.value))} placeholder="Ventas" title="Ventas estimadas en euros" />
-          </div>
-          <div>
-            <label className="block text-slate-600 mb-1" htmlFor="sim-gastos">Gastos estimados (€)</label>
-            <input id="sim-gastos" type="number" className="border rounded p-2 w-32" value={simGastos} min={0} onChange={e => setSimGastos(Number(e.target.value))} placeholder="Gastos" title="Gastos estimados en euros" />
-          </div>
-          <div>
-            <div className="text-slate-600">Flujo de caja simulado</div>
-            <div className={`text-lg font-bold ${simFlujo < 0 ? "text-red-600" : "text-green-600"}`}>{simFlujo >= 0 ? `+${simFlujo.toFixed(2)} €` : `${simFlujo.toFixed(2)} €`}</div>
-          </div>
-        </div>
-        <div className="mt-3">
-          <h4 className="font-semibold mb-1">Recomendaciones para este escenario</h4>
+        <div className="mb-6 p-4 bg-slate-100 rounded shadow">
+          <h3 className="font-semibold mb-2 flex items-center gap-2"><span className="text-teal-600">💡</span>Recomendaciones</h3>
           <ul className="list-disc pl-5 space-y-1">
-            {simRecomendaciones.map((rec, i) => (
+            {recomendaciones.map((rec, i) => (
               <li key={i} className="text-slate-700">{rec}</li>
             ))}
           </ul>
         </div>
-      </div>
-      {loading ? (
-        <div className="text-center text-slate-400">Cargando datos...</div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h3 className="text-lg font-semibold mb-2 flex items-center gap-2"><span className="text-teal-600">📈</span>Tendencia de Ventas</h3>
-            <Chart
-              options={{
-                chart: { id: "ventas" },
-                xaxis: { type: "datetime" },
-                title: { text: "Ventas en el tiempo" }
-              }}
-              series={[{ name: "Ventas", data: ventasData }]}
-              type="line"
-              height={300}
-            />
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-2 flex items-center gap-2"><span className="text-rose-600">💸</span>Tendencia de Gastos</h3>
-            <Chart
-              options={{
-                chart: { id: "gastos" },
-                xaxis: { type: "datetime" },
-                title: { text: "Gastos en el tiempo" }
-              }}
-              series={[{ name: "Gastos", data: gastosData }]}
-              type="line"
-              height={300}
-            />
+        <div className="mb-6 p-4 bg-slate-100 rounded shadow">
+          <h3 className="font-semibold mb-2 flex items-center gap-2"><span className="text-indigo-600">🔮</span>Proyección Próximo Mes</h3>
+          <div className="flex flex-col md:flex-row gap-6">
+            <div>
+              <div className="text-slate-600">Ventas estimadas</div>
+              <div className="text-lg font-bold">{proyeccionVentas.toFixed(2)} €</div>
+            </div>
+            <div>
+              <div className="text-slate-600">Gastos estimados</div>
+              <div className="text-lg font-bold">{proyeccionGastos.toFixed(2)} €</div>
+            </div>
+            <div>
+              <div className="text-slate-600">Flujo de caja estimado</div>
+              <div className={`text-lg font-bold ${proyeccionFlujo < 0 ? "text-red-600" : "text-green-600"}`}>{proyeccionFlujo >= 0 ? `+${proyeccionFlujo.toFixed(2)} €` : `${proyeccionFlujo.toFixed(2)} €`}</div>
+            </div>
           </div>
         </div>
-      )}
-    </div>
+        <div className="mb-6 p-4 bg-slate-100 rounded shadow">
+          <h3 className="font-semibold mb-2 flex items-center gap-2"><span className="text-fuchsia-600">🧮</span>Simulador de Escenarios (What-if)</h3>
+          <div className="flex flex-col md:flex-row gap-6 items-end">
+            <div>
+              <label className="block text-slate-600 mb-1" htmlFor="sim-ventas">Ventas estimadas (€)</label>
+              <input id="sim-ventas" type="number" className="border rounded p-2 w-32" value={simVentas} min={0} onChange={e => setSimVentas(Number(e.target.value))} placeholder="Ventas" title="Ventas estimadas en euros" />
+            </div>
+            <div>
+              <label className="block text-slate-600 mb-1" htmlFor="sim-gastos">Gastos estimados (€)</label>
+              <input id="sim-gastos" type="number" className="border rounded p-2 w-32" value={simGastos} min={0} onChange={e => setSimGastos(Number(e.target.value))} placeholder="Gastos" title="Gastos estimados en euros" />
+            </div>
+            <div>
+              <div className="text-slate-600">Flujo de caja simulado</div>
+              <div className={`text-lg font-bold ${simFlujo < 0 ? "text-red-600" : "text-green-600"}`}>{simFlujo >= 0 ? `+${simFlujo.toFixed(2)} €` : `${simFlujo.toFixed(2)} €`}</div>
+            </div>
+          </div>
+          <div className="mt-3">
+            <h4 className="font-semibold mb-1">Recomendaciones para este escenario</h4>
+            <ul className="list-disc pl-5 space-y-1">
+              {simRecomendaciones.map((rec, i) => (
+                <li key={i} className="text-slate-700">{rec}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        {loading ? (
+          <div className="text-center text-slate-400">Cargando datos...</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-lg font-semibold mb-2 flex items-center gap-2"><span className="text-teal-600">📈</span>Tendencia de Ventas</h3>
+              <Chart
+                options={{
+                  chart: { id: "ventas" },
+                  xaxis: { type: "datetime" },
+                  title: { text: "Ventas en el tiempo" }
+                }}
+                series={[{ name: "Ventas", data: ventasData }]}
+                type="line"
+                height={300}
+              />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2 flex items-center gap-2"><span className="text-rose-600">💸</span>Tendencia de Gastos</h3>
+              <Chart
+                options={{
+                  chart: { id: "gastos" },
+                  xaxis: { type: "datetime" },
+                  title: { text: "Gastos en el tiempo" }
+                }}
+                series={[{ name: "Gastos", data: gastosData }]}
+                type="line"
+                height={300}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+      <IAChatFloating />
+    </>
   );
 }
