@@ -14,7 +14,16 @@ Sigue estos pasos para tener un link público y usar todas las funcionalidades:
 
 4. **Configura las variables de entorno**
    - En el panel de Vercel, ve a "Settings" > "Environment Variables".
-   - Agrega tus claves: `OPENAI_API_KEY`, credenciales de Firebase, etc.
+   - Agrega tus claves:
+     - `OPENAI_API_KEY`
+     - `DATABASE_URL`
+     - `NEXT_PUBLIC_FIREBASE_API_KEY`
+     - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+     - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+     - `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
+     - `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+     - `NEXT_PUBLIC_FIREBASE_APP_ID`
+     - `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`
    - Si usas base de datos externa (MySQL), pon la URL en `DATABASE_URL`.
 
 5. **Haz deploy**

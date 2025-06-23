@@ -1,3 +1,23 @@
+# MalinoiseAPP
+
+Sistema integral de gestión empresarial y analítica predictiva, desarrollado en Next.js (TypeScript), Tailwind CSS, Prisma y Firebase. Incluye:
+
+- Dashboard analítico con gráficas interactivas y detección de anomalías.
+- Asistente IA empresarial (GPT-4) para consejos financieros, inventario, proveedores, exportación/importación y más.
+- Autenticación segura con Firebase Auth (registro, login, recuperación y verificación por email).
+- Gestión de clientes, productos, ventas y gastos.
+- Exportación de reportes a PDF y CSV.
+- Soporte multimoneda y multiidioma (español/inglés).
+- UI moderna, responsive y lista para despliegue en Vercel.
+
+Ideal para pymes, emprendedores y consultores que buscan control, inteligencia y escalabilidad en su negocio.
+
+---
+
+**Demo:** (despliega en Vercel para obtener tu link)
+
+**Documentación de despliegue:** ver `README_DEPLOY.md`
+
 # Malinoise Web App
 
 Malinoise es una aplicación web profesional para gestión empresarial y analítica predictiva, construida con Next.js, Tailwind CSS y Firebase.

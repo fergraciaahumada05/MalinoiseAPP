@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -14,40 +8,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Cliente {
-  id            Int      @id @default(autoincrement())
-  nombre        String
-  email         String
-  telefono      String?
+model cliente {
+  id             Int      @id @default(autoincrement())
+  nombre         String
+  email          String
+  telefono       String?
   fecha_registro DateTime @default(now())
-  ventas        Venta[]
+  venta          venta[]
 }
 
-model Producto {
+model gasto {
+  id          Int      @id @default(autoincrement())
+  descripcion String
+  categoria   String?
+  monto       Float
+  fecha       DateTime @default(now())
+}
+
+model producto {
   id         Int      @id @default(autoincrement())
   nombre     String
   sku        String
   stock      Int
   precio     Float
   fecha_alta DateTime @default(now())
-  ventas     Venta[]
+  venta      venta[]
 }
 
-model Venta {
+model venta {
   id         Int      @id @default(autoincrement())
-  producto   Producto @relation(fields: [productoId], references: [id])
   productoId Int
   cantidad   Int
-  cliente    Cliente? @relation(fields: [clienteId], references: [id])
   clienteId  Int?
   total      Float
   fecha      DateTime @default(now())
-}
+  cliente    cliente? @relation(fields: [clienteId], references: [id], map: "Venta_clienteId_fkey")
+  producto   producto @relation(fields: [productoId], references: [id], map: "Venta_productoId_fkey")
 
-model Gasto {
-  id         Int      @id @default(autoincrement())
-  descripcion String
-  categoria   String?
-  monto       Float
-  fecha       DateTime @default(now())
+  @@index([clienteId], map: "Venta_clienteId_fkey")
+  @@index([productoId], map: "Venta_productoId_fkey")
 }
