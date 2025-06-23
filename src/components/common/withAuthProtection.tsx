@@ -23,6 +23,6 @@ export function withAuthProtection<P>(Component: React.ComponentType<P>) {
 
     if (loading) return <div className="text-center mt-10">Cargando...</div>;
     if (!isAllowed) return null;
-    return <Component {...props} />;
+    return <Component {...(props as P)} />;
   };
 }
