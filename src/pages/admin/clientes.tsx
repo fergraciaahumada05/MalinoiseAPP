@@ -1,7 +1,7 @@
 // Página de gestión de clientes para el área admin (migrada desde pages/clientes.tsx)
 
-import { withAuthProtection } from "@/components/common/withAuthProtection";
 import { useEffect, useState } from 'react';
+import withAuthProtection from '@/components/common/withAuthProtection';
 
 interface Cliente {
   id: number;

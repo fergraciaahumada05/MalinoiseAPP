@@ -1,8 +1,7 @@
 // Página de gestión de gastos para el área admin (migrada desde pages/gastos.tsx)
 
-import { withAuthProtection } from "@/components/common/withAuthProtection";
 import { useEffect, useState } from 'react';
-import { saveAs } from 'file-saver';
+import withAuthProtection from "@/components/common/withAuthProtection";
 
 interface Gasto {
   id: number;

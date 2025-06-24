@@ -1,8 +1,7 @@
 // Página de gestión de ventas para el área admin (migrada desde pages/ventas.tsx)
 
-import { withAuthProtection } from "@/components/common/withAuthProtection";
 import { useEffect, useState } from 'react';
-import { saveAs } from 'file-saver';
+import withAuthProtection from "@/components/common/withAuthProtection";
 
 interface Venta {
   id: number;
@@ -34,30 +33,32 @@ function PaginaVentasAdmin() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
-      <h1>Gestión de Ventas</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Producto</th>
-            <th>Cantidad</th>
-            <th>Precio</th>
-            <th>Fecha</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ventas.map(venta => (
-            <tr key={venta.id}>
-              <td>{venta.id}</td>
-              <td>{venta.producto}</td>
-              <td>{venta.cantidad}</td>
-              <td>{venta.precio}</td>
-              <td>{new Date(venta.fecha).toLocaleDateString()}</td>
+    <div className="max-w-4xl mx-auto mt-8 p-6 bg-white rounded shadow">
+      <h1 className="text-2xl font-bold mb-6">Gestión de Ventas</h1>
+      <div className="overflow-x-auto">
+        <table className="min-w-full border border-gray-200 rounded">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="px-4 py-2 border">ID</th>
+              <th className="px-4 py-2 border">Producto</th>
+              <th className="px-4 py-2 border">Cantidad</th>
+              <th className="px-4 py-2 border">Precio</th>
+              <th className="px-4 py-2 border">Fecha</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {ventas.map(venta => (
+              <tr key={venta.id} className="hover:bg-gray-50">
+                <td className="px-4 py-2 border">{venta.id}</td>
+                <td className="px-4 py-2 border">{venta.producto}</td>
+                <td className="px-4 py-2 border">{venta.cantidad}</td>
+                <td className="px-4 py-2 border">{venta.precio.toLocaleString("es-MX", { style: "currency", currency: "MXN" })}</td>
+                <td className="px-4 py-2 border">{new Date(venta.fecha).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 // Página de gestión de productos para el área admin (migrada desde pages/productos.tsx)
 
-import { withAuthProtection } from "@/components/common/withAuthProtection";
 import { useEffect, useState } from 'react';
+import withAuthProtection from "@/components/common/withAuthProtection";
 
 interface Producto {
   id: number;

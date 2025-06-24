@@ -1,10 +1,7 @@
-import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { ApexOptions } from "apexcharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid, Legend } from "recharts";
 import jsPDF from "jspdf";
 import { saveAs } from "file-saver";
-
-const ReactApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 interface Gasto {
   id: number;
@@ -129,19 +126,15 @@ export default function DashboardAdmin() {
     saveAs(blob, `consejo-ia-${new Date().toISOString().slice(0,10)}.csv`);
   };
 
-  const gastosOptions: ApexOptions = {
-    chart: { type: "bar" },
-    xaxis: { categories: gastos.map(g => g.descripcion) },
-    title: { text: language.code === "en" ? "Recent Expenses" : "Gastos recientes" },
-  };
-  const gastosSeries = [{ name: language.code === "en" ? "Amount" : "Monto", data: gastos.map(g => g.monto * (currencyRates[currency.code] || 1)) }];
-
-  const ventasOptions: ApexOptions = {
-    chart: { type: "line" },
-    xaxis: { categories: ventas.map(v => new Date(v.fecha).toLocaleDateString(language.code)) },
-    title: { text: language.code === "en" ? "Sales by Date" : "Ventas por fecha" },
-  };
-  const ventasSeries = [{ name: language.code === "en" ? "Total" : "Total", data: ventas.map(v => v.total * (currencyRates[currency.code] || 1)) }];
+  // Prepara los datos para Recharts
+  const gastosChartData = gastos.map(g => ({
+    descripcion: g.descripcion,
+    monto: g.monto * (currencyRates[currency.code] || 1)
+  }));
+  const ventasChartData = ventas.map(v => ({
+    fecha: new Date(v.fecha).toLocaleDateString(language.code),
+    total: v.total * (currencyRates[currency.code] || 1)
+  }));
 
   return (
     <div className="max-w-5xl mx-auto mt-8 p-6 bg-white rounded shadow">
@@ -172,10 +165,27 @@ export default function DashboardAdmin() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <ReactApexChart options={gastosOptions} series={gastosSeries} type="bar" height={300} />
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={gastosChartData}>
+              <XAxis dataKey="descripcion" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="monto" name={language.code === "en" ? "Amount" : "Monto"} fill="#38bdf8" />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
         <div>
-          <ReactApexChart options={ventasOptions} series={ventasSeries} type="line" height={300} />
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={ventasChartData}>
+              <XAxis dataKey="fecha" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+              <Line type="monotone" dataKey="total" name={language.code === "en" ? "Total" : "Total"} stroke="#0f766e" />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
       {anomalies.length > 0 && (
