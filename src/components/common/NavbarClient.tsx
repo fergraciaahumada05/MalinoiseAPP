@@ -1,9 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "@/firebase/config";
 
 function ThemeToggle() {
   const [dark, setDark] = useState(false);

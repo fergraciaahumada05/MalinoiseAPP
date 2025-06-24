@@ -48,10 +48,6 @@ export default function DashboardAdmin() {
 
   // Conversión simple de divisas (puedes conectar a una API real si lo deseas)
   const currencyRates: Record<string, number> = { EUR: 1, USD: 1.08, MXN: 19, GBP: 0.85 };
-  const formatCurrency = (amount: number) => {
-    const converted = amount * (currencyRates[currency.code] || 1);
-    return `${currency.symbol}${converted.toLocaleString(language.code, { minimumFractionDigits: 2 })}`;
-  };
 
   useEffect(() => {
     fetch("/api/admin/gastos").then(r => r.json()).then(setGastos);
@@ -152,14 +148,24 @@ export default function DashboardAdmin() {
       <h2 className="text-2xl font-bold mb-6">Dashboard Analítico</h2>
       <div className="flex gap-4 mb-6">
         <div>
-          <label className="block text-xs font-bold mb-1">Divisa</label>
-          <select value={currency.code} onChange={e => setCurrency(currencyOptions.find(c => c.code === e.target.value) || currencyOptions[0])} className="border rounded p-1">
+          <label htmlFor="currency-select" className="block text-xs font-bold mb-1">Divisa</label>
+          <select
+            id="currency-select"
+            value={currency.code}
+            onChange={e => setCurrency(currencyOptions.find(c => c.code === e.target.value) || currencyOptions[0])}
+            className="border rounded p-1"
+          >
             {currencyOptions.map(opt => <option key={opt.code} value={opt.code}>{opt.code} {opt.symbol}</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-xs font-bold mb-1">Idioma</label>
-          <select value={language.code} onChange={e => setLanguage(languageOptions.find(l => l.code === e.target.value) || languageOptions[0])} className="border rounded p-1">
+          <label htmlFor="language-select" className="block text-xs font-bold mb-1">Idioma</label>
+          <select
+            id="language-select"
+            value={language.code}
+            onChange={e => setLanguage(languageOptions.find(l => l.code === e.target.value) || languageOptions[0])}
+            className="border rounded p-1"
+          >
             {languageOptions.map(opt => <option key={opt.code} value={opt.code}>{opt.label}</option>)}
           </select>
         </div>
